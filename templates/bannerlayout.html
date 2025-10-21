@@ -1,12 +1,19 @@
 {% load static %}
 
-<div class="row">
+<div class="row banner">
     <div class="col-2">
         <h1>Give Your Events <br> A New Style!</h1>
         <p>"Some people look for a beautiful place. <br> Others make a place beautiful.” </p>
-        <a href="" class="btn">Explore Now &#8594;</a>
+        <a href="#" class="btn">Explore Now &#8594;</a>
+
+        <!-- Display logged-in user's name -->
+        {% if user.is_authenticated %}
+            <p class="welcome-msg">Welcome, {{ user.username }}!</p>
+        {% else %}
+            <p class="welcome-msg">Welcome, Guest!</p>
+        {% endif %}
     </div>
     <div class="col-2">
-        <img src="{% static 'images/logoheader2.jpg' %}">
+        <img src="{% static 'images/logoheader2.jpg' %}" alt="Logo">
     </div>
 </div>

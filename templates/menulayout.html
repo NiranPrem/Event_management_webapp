@@ -2,14 +2,14 @@
 
 <div class="navbar">
     <div class="logo">
-        <a href="index.html"><img src="{% static 'images/eventslogs.png' %}" alt="logo" width="125px"></a>
+        <a href="{% url 'home' %}"><img src="{% static 'images/eventslogs.png' %}" alt="logo" width="125px"></a>
     </div>
     <nav>
         <ul id="MenuItems">
             <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'eventlist' %}">Events</a></li>
-            <li><a href="">About</a></li>
-            <li><a href="">Contact</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
             <li><a href="{% url 'login' %}">Account</a></li>
         </ul>
     </nav>
