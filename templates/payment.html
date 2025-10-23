@@ -5,6 +5,25 @@
     <h2>Payment Gateway</h2>
     <p>Please enter your payment details below to complete your booking.</p>
 
+    <table style="width:100%; border-collapse: collapse; margin-bottom:20px;">
+        <tr style="background-color:#f2f2f2; text-align:left;">
+            <th style="padding:10px;">Event</th>
+            <th style="padding:10px;">Guest Count</th>
+            <th style="padding:10px;">Price/Guest</th>
+            <th style="padding:10px;">Total</th>
+        </tr>
+        {% for item in cart_items %}
+        <tr style="border-bottom:1px solid #ddd;">
+            <td style="padding:10px;">{{ item.event.title }}</td>
+            <td style="padding:10px;">{{ item.guestcount }}</td>
+            <td style="padding:10px;">${{ item.event.price }}</td>
+            <td style="padding:10px;">${{ item.event.price|mul:item.guestcount }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Total Amount: ${{ total_amount }}</h3>
+
     <form method="POST" action="{% url 'process_payment' %}" 
           style="display:flex; flex-direction:column; gap:15px; text-align:left; margin-top:30px;">
         {% csrf_token %}
