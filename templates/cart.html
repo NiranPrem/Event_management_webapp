@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
 <div class="small-container cart-page">
     <h2>Your Cart</h2>
 
@@ -14,16 +18,23 @@
                 <td style="padding:10px;">{{ item.event.title }}</td>
                 <td style="padding:10px;">{{ item.guestcount }}</td>
                 <td style="padding:10px;">
-                    <a href="{% url 'remove_from_cart' item.id %}" class="btn" style="background:#f44336;">Remove</a>
+                    <a href="{% url 'remove_from_cart' item.id %}" 
+                       class="btn" style="background:#f44336;">Remove</a>
                 </td>
             </tr>
             {% endfor %}
         </table>
 
-        <div style="margin-top:30px;">
-            <a href="#" class="btn" style="background:#4CAF50;">Proceed to Payment</a>
+        <div style="margin-top:30px; text-align:right;">
+            <a href="{% url 'payment_page' %}" 
+               class="btn" 
+               style="background:#4CAF50; color:#fff; padding:12px 25px; border-radius:5px; text-decoration:none;">
+               Proceed to Payment →
+            </a>
         </div>
     {% else %}
         <p style="padding:20px;">Your cart is empty.</p>
     {% endif %}
 </div>
+
+{% endblock %}

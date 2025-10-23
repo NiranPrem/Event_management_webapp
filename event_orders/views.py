@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from events.models import Event
 from .models import eventcart, eventbookeditem
 
+# ---------------- Existing Cart Views ---------------- #
 
 @login_required
 def add_to_cart(request, event_id):
@@ -34,3 +35,67 @@ def remove_from_cart(request, item_id):
     item.delete()
     messages.success(request, f"{item.event.title} removed from your cart.")
     return redirect('orderscart')
+
+
+# ---------------- New Payment Views ---------------- #
+
+@login_required
+def payment_page(request):
+    """
+    Display payment form to the user.
+    """
+    profile = request.user.customer_profile
+    cart = eventcart.objects.filter(owner=profile, delete_status=eventcart.LIVE).first()
+    items = cart.added_events.select_related('event').all() if cart else []
+
+    if not items:
+        messages.warning(request, "Your cart is empty! Please add events before proceeding to payment.")
+        return redirect('orderscart')
+
+    total_amount = 0
+    for item in items:
+        total_amount += item.event.price * item.guestcount  # Assuming Event model has 'price' field
+
+    context = {
+        'cart_items': items,
+        'total_amount': total_amount,
+    }
+    return render(request, 'payment.html', context)
+
+
+@login_required
+def process_payment(request):
+    """
+    Simulates payment gateway processing.
+    You can later integrate Razorpay, Stripe, etc.
+    """
+    if request.method == 'POST':
+        profile = request.user.customer_profile
+        cart = eventcart.objects.filter(owner=profile, delete_status=eventcart.LIVE).first()
+
+        if not cart:
+            messages.error(request, "No active cart found!")
+            return redirect('orderscart')
+
+        # Here you can add payment gateway logic or API call
+        # For now, simulate payment success
+        cart.delete_status = eventcart.DELETED  # Mark cart as completed
+        cart.save()
+
+        # Optionally, mark events as booked
+        for item in cart.added_events.all():
+            item.status = eventbookeditem.BOOKED  # assuming you have a status field
+            item.save()
+
+        messages.success(request, "Payment successful! Your events have been booked.")
+        return redirect('payment_success')
+
+    return redirect('payment_page')
+
+
+@login_required
+def payment_success(request):
+    """
+    Display a simple payment success page.
+    """
+    return render(request, 'payment_success.html')
